@@ -1,6 +1,10 @@
 CGI-Builder-DFVCheck Latest Versions Changes
 
 
+Version 1.21
+- Changed Makefile.PL version check
+- Minor POD changes
+
 Version 1.2
 - Fixed some POD errors
 - More detailed examples

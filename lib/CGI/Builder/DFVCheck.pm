@@ -1,5 +1,5 @@
 package CGI::Builder::DFVCheck ;
-$VERSION = 1.2 ;
+$VERSION = 1.21 ;
 
 ; use strict
 ; use Carp
@@ -7,12 +7,7 @@ $VERSION = 1.2 ;
 ; $Carp::Internal{'Data::FormValidator'}++
 ; $Carp::Internal{+__PACKAGE__}++
 
-; use Object::groups
-      ( { name       => 'dfv_defaults'
-        , no_strict  => 1
-        }
-      )
-      
+; use Object::groups qw | dfv_defaults |
 ; use Object::props
       ( { name       => 'dfv_results'
         , allowed    => qr /::dfv_check$/
@@ -20,23 +15,17 @@ $VERSION = 1.2 ;
       )
 
 ; sub dfv_new
-   { my $s = shift
-   ; Data::FormValidator->new( {}
-                              , scalar $s->dfv_defaults
-                              )
+   { Data::FormValidator->new( {}
+                             , scalar $_[0]->dfv_defaults
+                             )
    }
-   
+    
 ; sub dfv_check
    { my ($s, $profile) = @_
    ; $profile || croak 'Missing required profile'
-   ; $profile = do {  ref $profile eq 'HASH' && $profile
-                   || eval { $s->$profile() }
-                   }
-   ; $@ && croak qq(Error running profile method "$profile": $@)
-   ; my $dfv = $s->dfv_new
-   ; my $r = $dfv->check( $s->cgi
-                        , $profile
-                        )
+   ; $profile = $s->$profile()
+                unless ref $profile eq 'HASH'
+   ; my $r = $s->dfv_new->check( $s->cgi, $profile )
    ; if (  $r->has_missing
         || $r->has_invalid
         )
@@ -57,7 +46,7 @@ __END__
 
 CGI::Builder::DFVCheck - CGI::Builder and Data::FormValidator integration
 
-=head1 VERSION 1.2
+=head1 VERSION 1.21
 
 To have the complete list of all the extensions of the CBF, see L<CGI::Builder/"Extensions List">
 
@@ -67,14 +56,14 @@ To have the complete list of all the extensions of the CBF, see L<CGI::Builder/"
 
 =item Prerequisites
 
-    CGI::Builder        >= 1.0
+    CGI::Builder        >= 1.2
     Data::FormValidator >= 3.5
 
 =item CPAN
 
-    perl -MCPAN -e 'install CGI::Builder::DFVCheck'
+    perl -MCPAN -e 'install Apache::CGI::Builder'
 
-If you want to install all the extensions and prerequisites of the CBF, all in one easy step:
+You have also the possibility to use the Bundle to install all the extensions and prerequisites of the CBF in just one step. Please, notice that the Bundle will install A LOT of modules that you might not need, so use it specially if you want to extensively try the CBF.
 
     perl -MCPAN -e 'install Bundle::CGI::Builder::Complete'
 
@@ -140,11 +129,11 @@ It adds to your build an useful C<dfv_check()> method that you can use in your S
 
 =item *
 
-A simple and useful navigation system between the various CBF extensions is available at this URL: http://perl.4pro.net
+A simple and useful navigation system between the various CBF extensions is available at this URL: L<http://perl.4pro.net>
 
 =item *
 
-More practical topics are probably discussed in the mailing list at this URL: http://lists.sourceforge.net/lists/listinfo/cgi-builder-users
+More practical topics are probably discussed in the mailing list at this URL: L<http://lists.sourceforge.net/lists/listinfo/cgi-builder-users>
 
 =back
 
@@ -182,7 +171,7 @@ Somewhere in the F<input_form.html> template (or in any other template) all the 
 
     <!--{err_email}-->
 
-This could be the F<input_form.html> template file:
+This might be the F<input_form.html> template file:
 
     <!--{FillInForm}-->
     <form action="thank_you" method="get">
@@ -192,7 +181,7 @@ This could be the F<input_form.html> template file:
     </form>
     <!--{/FillInForm}-->
 
-B<Note>: The 'FillInForm' block is optional, but it will automatically re-fills the fields on error (if you are using CGI::Builder::Magic >= 1.22).
+B<Note>: The 'FillInForm' block is optional, but it will automatically re-fills the fields on error (if you are using CGI::Builder::Magic >= 1.2).
 
 =head2 CGI::Builder::Magic Example 2
 
@@ -233,7 +222,7 @@ Somewhere in the 'input_form.html' template (or in any other template) all the '
 
     <!--{MISSING}-->
 
-This could be the F<input_form.html> template file:
+This might be the F<input_form.html> template file:
 
     <!--{FillInForm}-->
     <form action="thank_you" method="get">
@@ -244,7 +233,7 @@ This could be the F<input_form.html> template file:
     </form>
     <!--{/FillInForm}-->
 
-B<Note>: The 'FillInForm' block is optional, but it will automatically re-fills the fields on error (if you are using CGI::Builder::Magic >= 1.22).
+B<Note>: The 'FillInForm' block is optional, but it will automatically re-fills the fields on error (if you are using CGI::Builder::Magic >= 1.2).
 
 =head1 METHODS
 
@@ -268,7 +257,7 @@ B<Note>: You can completely override the creation of the internal object by over
 
 =head2 dfv_results
 
-This property allows you to access the C<Data::FormValidator::Results> object set by the C<dfv_check()> method only if there are some missing or invalid fields.
+This read only property allows you to access the C<Data::FormValidator::Results> object set by the C<dfv_check()> method only if there are some missing or invalid fields.
 
 =head1 SUPPORT
 
@@ -276,11 +265,11 @@ Support for all the modules of the CBF is via the mailing list. The list is used
 
 You can join the CBF mailing list at this url:
 
-http://lists.sourceforge.net/lists/listinfo/cgi-builder-users
+L<http://lists.sourceforge.net/lists/listinfo/cgi-builder-users>
 
 =head1 AUTHOR and COPYRIGHT
 
-© 2004 by Domizio Demichelis (http://perl.4pro.net)
+© 2004 by Domizio Demichelis (L<http://perl.4pro.net>)
 
 All Rights Reserved. This module is free software. It may be used, redistributed and/or modified under the same terms as perl itself.
 
