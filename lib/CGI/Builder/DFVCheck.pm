@@ -1,13 +1,11 @@
 package CGI::Builder::DFVCheck ;
-$VERSION = 1.24 ;
+$VERSION = 1.25 ;
 
 # This file uses the "Perlish" coding style
 # please read http://perl.4pro.net/perlish_coding_style.html
 
 ; use strict
 ; use Carp
-; use Data::FormValidator
-; $Carp::Internal{'Data::FormValidator'}++
 ; $Carp::Internal{+__PACKAGE__}++
 
 ; use Object::groups qw | dfv_defaults |
@@ -18,7 +16,9 @@ $VERSION = 1.24 ;
       )
 
 ; sub dfv_new
-   { Data::FormValidator->new( {}
+   { require Data::FormValidator
+   ; $Carp::Internal{'Data::FormValidator'}++
+   ; Data::FormValidator->new( {}
                              , scalar $_[0]->dfv_defaults
                              )
    }
@@ -30,7 +30,7 @@ $VERSION = 1.24 ;
                 unless ref $profile eq 'HASH'
    ; my $r = $s->dfv_results = $s->dfv_new->check( $s->cgi, $profile )
    ; ( $r->has_missing || $r->has_invalid )
-     ? do{ $s->page_error($r->msgs); 0}
+     ? do{ $s->page_error($r->msgs); 0 }
      : 1
    }
    
@@ -42,7 +42,7 @@ __END__
 
 CGI::Builder::DFVCheck - CGI::Builder and Data::FormValidator integration
 
-=head1 VERSION 1.24
+=head1 VERSION 1.25
 
 To have the complete list of all the extensions of the CBF, see L<CGI::Builder/"Extensions List">
 
@@ -93,9 +93,9 @@ From the directory where this file is located, type:
 
 =head1 DESCRIPTION
 
-This module integrates the C<Data::FormValidator> capability with C<CGI::Builder>.
+B<Note>: You should know L<CGI::Builder>.
 
-It adds to your build an useful C<dfv_check()> method that you can use in your Switch Handlers (or in your Page Handlers) to check the input e.g. from a form. If any error is found, then the methods will return '0' (false) and will set the C<page_error> group accessor to the $results->msgs.
+This module integrates the C<Data::FormValidator> capability with C<CGI::Builder>. It adds to your build an useful C<dfv_check()> method that you can use in your Switch Handlers (or in your Page Handlers) to check the input e.g. from a form. If any error is found, then the methods will return '0' (false) and will set the C<page_error> group accessor to the $results->msgs.
 
 =head2 CGI::Builder Example
 
@@ -119,20 +119,6 @@ It adds to your build an useful C<dfv_check()> method that you can use in your S
             $s->page_content .= "$field field has this problem: $err\n"
         }
     }
-
-=head2 Useful links
-
-=over
-
-=item *
-
-A simple and useful navigation system between the various CBF extensions is available at this URL: L<http://perl.4pro.net>
-
-=item *
-
-More examples and more practical topics are available in the mailing list at this URL: L<http://lists.sourceforge.net/lists/listinfo/cgi-builder-users>
-
-=back
 
 =head1 INTEGRATION WITH CGI::Builder::Magic
 
@@ -256,13 +242,13 @@ B<Note>: You can completely override the creation of the internal object by over
 
 This read only property allows you to access the C<Data::FormValidator::Results> object set by the C<dfv_check()> method.
 
+=head1 EFFICIENCY
+
+The C<Data::FormValidator> module is required only if-and-when you use the dfv_check method, that usually occours at run time. That will save loading time in CGI environment (i.e. false $ENV{MOD_PERL}) but if most requests use any dfv_check method, it might be more efficient add a 'use Data::FormValidator;' to your code, which will load the module at compile time (regardless the request will actually use it).
+
 =head1 SUPPORT
 
-Support for all the modules of the CBF is via the mailing list. The list is used for general support on the use of the CBF, announcements, bug reports, patches, suggestions for improvements or new features. The API to the CBF is stable, but if you use the CBF in a production environment, it's probably a good idea to keep a watch on the list.
-
-You can join the CBF mailing list at this url:
-
-L<http://lists.sourceforge.net/lists/listinfo/cgi-builder-users>
+See L<CGI::Builder/"SUPPORT">.
 
 =head1 AUTHOR and COPYRIGHT
 

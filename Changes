@@ -1,5 +1,9 @@
 CGI-Builder-DFVCheck Latest Versions Changes
 
+Version 1.25
+- Data::FormValidator loading moved to run-time
+- Added EFFICIENCY POD section 
+- A few minor changes in the Makefile.PL and the POD
 
 Version 1.24
 - Added filter support (the dfv_resuts is always set after a dfv_check)
