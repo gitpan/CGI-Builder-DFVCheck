@@ -1,0 +1,10 @@
+Changes
+lib/CGI/Builder/DFVCheck.pm
+Makefile.PL
+MANIFEST			This list of files
+META.yml
+README
+t/01_features.t
+t/MagicTest.pm
+t/Test.pm
+t/tm/myOtherPage.html
