@@ -1,6 +1,10 @@
 CGI-Builder-DFVCheck Latest Versions Changes
 
 
+Version 1.24
+- Added filter support (the dfv_resuts is always set after a dfv_check)
+- Added dfv_resuts and memory leaking test
+
 Version 1.23
 - Eliminated version check and installation feedback system
   ("phone home" opt-out) from Makefile.PL to make Randal L Schwartz happy :-)

@@ -1,6 +1,6 @@
 #!perl -w
 ; use strict
-; use Test::More tests => 2
+; use Test::More tests => 3
 ; use CGI
 
 ; our $TM
@@ -24,6 +24,8 @@
 ; ok(  $$o1 =~ /err_email <span/
     && $$o1 !~ /index content/
     )
+; ok($ap1->dfv_results)
+    
     
 ; SKIP:
    { skip("CGI::Builder::Magic is not installed", 1)

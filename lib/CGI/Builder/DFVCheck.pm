@@ -1,5 +1,5 @@
 package CGI::Builder::DFVCheck ;
-$VERSION = 1.23 ;
+$VERSION = 1.24 ;
 
 # This file uses the "Perlish" coding style
 # please read http://perl.4pro.net/perlish_coding_style.html
@@ -22,25 +22,18 @@ $VERSION = 1.23 ;
                              , scalar $_[0]->dfv_defaults
                              )
    }
-    
+
 ; sub dfv_check
    { my ($s, $profile) = @_
    ; $profile || croak 'Missing required profile'
    ; $profile = $s->$profile()
                 unless ref $profile eq 'HASH'
-   ; my $r = $s->dfv_new->check( $s->cgi, $profile )
-   ; if (  $r->has_missing
-        || $r->has_invalid
-        )
-      { $s->dfv_results = $r
-      ; $s->page_error($r->msgs)
-      ; return 0
-      }
-     else
-      { return 1
-      }
+   ; my $r = $s->dfv_results = $s->dfv_new->check( $s->cgi, $profile )
+   ; ( $r->has_missing || $r->has_invalid )
+     ? do{ $s->page_error($r->msgs); 0}
+     : 1
    }
-
+   
 ; 1
 
 __END__
@@ -49,7 +42,7 @@ __END__
 
 CGI::Builder::DFVCheck - CGI::Builder and Data::FormValidator integration
 
-=head1 VERSION 1.23
+=head1 VERSION 1.24
 
 To have the complete list of all the extensions of the CBF, see L<CGI::Builder/"Extensions List">
 
@@ -93,7 +86,8 @@ From the directory where this file is located, type:
    # if there is any error
    # $s->page_error is automatically set
    # to the $result->msgs HASH ref
-   # and $s->dfv_results to the results object
+   
+   # $s->dfv_results is always set to the results object
     
    $results = $s->dfv_results
 
@@ -101,7 +95,7 @@ From the directory where this file is located, type:
 
 This module integrates the C<Data::FormValidator> capability with C<CGI::Builder>.
 
-It adds to your build an useful C<dfv_check()> method that you can use in your Switch Handlers (or in your Page Handlers) to check the input e.g. from a form. If any error is found, then the methods will return '0' (false) and will set the C<page_error> group accessor to the $results->msgs, and will add the C<dfv_results> property.
+It adds to your build an useful C<dfv_check()> method that you can use in your Switch Handlers (or in your Page Handlers) to check the input e.g. from a form. If any error is found, then the methods will return '0' (false) and will set the C<page_error> group accessor to the $results->msgs.
 
 =head2 CGI::Builder Example
 
@@ -242,7 +236,7 @@ B<Note>: The 'FillInForm' block is optional, but it will automatically re-fills 
 
 =head2 dfv_check ( dfv_profile )
 
-Use this method to check the query parameters with the I<dfv_profile>. It returns 1 on success and 0 on failure. If there are some missing or unvalid fields it set also the C<dfv_results> property to the Data::FormValidator::Results object, and the C<page_error> CBF property to the C<< $s->dfv_results->msgs >> HASH reference.
+Use this method to check the query parameters with the I<dfv_profile>. It returns 1 on success and 0 on failure. If there are some missing or unvalid fields it set also the C<page_error> WebApp property to the C<< $s->dfv_results->msgs >> HASH reference.
 
 =head2 dfv_new
 
@@ -260,7 +254,7 @@ B<Note>: You can completely override the creation of the internal object by over
 
 =head2 dfv_results
 
-This read only property allows you to access the C<Data::FormValidator::Results> object set by the C<dfv_check()> method only if there are some missing or invalid fields.
+This read only property allows you to access the C<Data::FormValidator::Results> object set by the C<dfv_check()> method.
 
 =head1 SUPPORT
 

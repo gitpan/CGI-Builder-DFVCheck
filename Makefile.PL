@@ -3,19 +3,20 @@
 
 ; use ExtUtils::MakeMaker
 
-; my $dist = 'CGI::Builder::DFVCheck'
-; my $vers = '1.23'
+; my $pm = 'lib/CGI/Builder/DFVCheck.pm'
 
 ; WriteMakefile
-   ( NAME           => $dist
-   , VERSION        => $vers
+   ( NAME           => 'CGI::Builder::DFVCheck'
+   , VERSION_FROM   => $pm
    , ( $] ge '5.005' )
      ? ( AUTHOR     => 'Domizio Demichelis - perl.4pro.net'
-       , ABSTRACT   => 'CGI::Builder and Data::FormValidator integration'
+       , ABSTRACT_FROM => $pm
        )
      : ()
-   , PREREQ_PM      => { 'CGI::Builder'        => '1.2'
-                       , 'Data::FormValidator' => '3'
+   , PREREQ_PM      => { 'CGI::Builder'        => 1.2
+                       , 'Object::groups'      => 1.62
+                       , 'Object::props'       => 1.62
+                       , 'Data::FormValidator' => 3
                        }
    )
 
