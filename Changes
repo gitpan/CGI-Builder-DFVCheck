@@ -1,6 +1,11 @@
 CGI-Builder-DFVCheck Latest Versions Changes
 
 
+Version 1.23
+- Eliminated version check and installation feedback system
+  ("phone home" opt-out) from Makefile.PL to make Randal L Schwartz happy :-)
+  and sad the author :-(
+
 Version 1.22
 - Minor POD changes
 

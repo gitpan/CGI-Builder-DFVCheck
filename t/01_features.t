@@ -6,12 +6,15 @@
 ; our $TM
 
 ; BEGIN
-   { chdir './t'
-   ; require './Test.pm'
+   { eval { require './t/Test.pm' }
+         || require './Test.pm'
    ; if ( eval { require CGI::Builder::Magic })
       { $TM = 1
-      ; require 'MagicTest.pm'
+      ; eval { require './t/MagicTest.pm'
+             }
+            || require './MagicTest.pm'
       }
+   ; chdir './t' 
    }
 
 # index.tmpl

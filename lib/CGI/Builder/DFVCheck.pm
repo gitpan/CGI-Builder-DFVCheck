@@ -1,5 +1,5 @@
 package CGI::Builder::DFVCheck ;
-$VERSION = 1.22 ;
+$VERSION = 1.23 ;
 
 # This file uses the "Perlish" coding style
 # please read http://perl.4pro.net/perlish_coding_style.html
@@ -49,7 +49,7 @@ __END__
 
 CGI::Builder::DFVCheck - CGI::Builder and Data::FormValidator integration
 
-=head1 VERSION 1.22
+=head1 VERSION 1.23
 
 To have the complete list of all the extensions of the CBF, see L<CGI::Builder/"Extensions List">
 
@@ -78,8 +78,6 @@ From the directory where this file is located, type:
     make
     make test
     make install
-
-B<Note>: The installation of this module runs an automatic version check connection which will warn you in case a newer version is available: please don't use old versions, because I can give you full support only for current versions. Besides, since CPAN does not provide any download statistic to the authors, this check allows me also to keep my own installation counter. Version checking is transparent to regular users, while CPAN testers should skip it by running the Makefile.PL with NO_VERSION_CHECK=1.
 
 =back
 
@@ -138,7 +136,7 @@ A simple and useful navigation system between the various CBF extensions is avai
 
 =item *
 
-More practical topics are probably discussed in the mailing list at this URL: L<http://lists.sourceforge.net/lists/listinfo/cgi-builder-users>
+More examples and more practical topics are available in the mailing list at this URL: L<http://lists.sourceforge.net/lists/listinfo/cgi-builder-users>
 
 =back
 
