@@ -1,5 +1,5 @@
 package CGI::Builder::DFVCheck ;
-$VERSION = 1.0 ;
+$VERSION = 1.2 ;
 
 ; use strict
 ; use Carp
@@ -57,7 +57,7 @@ __END__
 
 CGI::Builder::DFVCheck - CGI::Builder and Data::FormValidator integration
 
-=head1 VERSION 1.0
+=head1 VERSION 1.2
 
 To have the complete list of all the extensions of the CBF, see L<CGI::Builder/"Extensions List">
 
@@ -123,7 +123,6 @@ It adds to your build an useful C<dfv_check()> method that you can use in your S
       my $s = shift ;
       $s->dfv_check({ required => 'email' })
         || $s->switch_to('myOtherPage');
-      ...
     }
     
     # do something with page_error
@@ -131,44 +130,73 @@ It adds to your build an useful C<dfv_check()> method that you can use in your S
         my $s  = shift ;
         my $E = $s->page_error ;
         while ( my($field, $err) = each %$E ) {
-            $s->page_content .= "$field $err\n"
+            $s->page_content .= "$field field has this problem: $err\n"
         }
     }
 
+=head2 Useful links
+
+=over
+
+=item *
+
+A simple and useful navigation system between the various CBF extensions is available at this URL: http://perl.4pro.net
+
+=item *
+
+More practical topics are probably discussed in the mailing list at this URL: http://lists.sourceforge.net/lists/listinfo/cgi-builder-users
+
+=back
 
 =head1 INTEGRATION WITH CGI::Builder::Magic
 
 The integration with C<CGI::Builder::Magic> is very powerful.
 
-You need just to pass the profile to the dfv_check() method and put the labels in the template: no other configuration needed on your side: the error labels in any template will be auto-magically substituted with the error string when needed.
+You need just to pass the profile to the dfv_check() method, put the labels in the template and no other configuration needed on your side: the error labels in any template will be auto-magically substituted with the error string when needed.
 
 B<Note>: The hash reference returned by the msgs() method will internally set the C<< $s->page_error >> which is passed as a lookup location to the C<Template::Magic> object.
 
 =head2 CGI::Builder::Magic Example 1
 
+Your CBB:
+
     package My::WebAppMagic ;
     use CGI::Builder
     qw| CGI::Builder::DFVCheck
         CGI::Builder::Magic
       |;
     
-    sub SH_myPage
+    sub SH_thank_you
     {
       my $s = shift ;
       $s->dfv_check({ required => 'email',
                       msgs     => { prefix     => 'err_' },
                     })
-        || $s->switch_to('myOtherPage');
-      ...
+        || $s->switch_to('input_form');
     }
     
-    # the PH_myOtherPage method is optional
+    # the PH_thank_you and the PH_input_form handlers are optional
+    # if you have the templates 'thank_you.html' and 'input_form.html'
 
-Somewhere in the 'myOtherPage.html' template (or in any other template) all the label prefixed with 'err_' will be substitute with the relative error if present (with the profile passed in the example it happens just with 'err_email'):
+Somewhere in the F<input_form.html> template (or in any other template) all the label prefixed with 'err_' will be substituted with the relative error if present (with the profile passed in the example it happens just with 'err_email'):
 
     <!--{err_email}-->
 
+This could be the F<input_form.html> template file:
+
+    <!--{FillInForm}-->
+    <form action="thank_you" method="get">
+    Name: <input name="name" type="text" value=""><br>
+    Email: <input name="email" type="text" value=""><!--{err_email}--><br>
+    <input type="submit" name="submit" value="Submit">
+    </form>
+    <!--{/FillInForm}-->
+
+B<Note>: The 'FillInForm' block is optional, but it will automatically re-fills the fields on error (if you are using CGI::Builder::Magic >= 1.22).
+
 =head2 CGI::Builder::Magic Example 2
+
+Your CBB:
 
     package My::WebAppMagic ;
     use CGI::Builder
@@ -176,17 +204,17 @@ Somewhere in the 'myOtherPage.html' template (or in any other template) all the 
         CGI::Builder::Magic
       |;
     
-    sub SH_myPage
+    sub SH_thank_you
     {
       my $s = shift ;
       $s->dfv_check({ required => 'email',
-                      msgs     => { prefix     => 'err_'  }
+                      msgs     => { prefix => 'err_' }
                    })
-        || $s->switch_to('myOtherPage');
-      ...
+        || $s->switch_to('input_form');
     }
     
-    # the PH_myOtherPage method is optional
+    # the PH_thank_you and the PH_input_form handlers are optional
+    # if you have the templates 'thank_you.html' and 'input_form.html'
     
     package WebAppMagic::Lookups;
     
@@ -195,16 +223,28 @@ Somewhere in the 'myOtherPage.html' template (or in any other template) all the 
         my $missing
         if ( $s->dfv_resuts->has_missing ) {
             foreach my $f ( $s->dfv_resuts->missing ) {
-               $missing .= $f, " is missing\n";
+               $missing .= "<b>$f</b> value is missing<br>\n";
             }
         }
         $missing
     }
 
-Somewhere in the 'myOtherPage.html' template (or in any other template) all the 'MISSING' labels will be substitute with the relative error if present:
+Somewhere in the 'input_form.html' template (or in any other template) all the 'MISSING' labels will be substituted with the relative error if present:
 
     <!--{MISSING}-->
 
+This could be the F<input_form.html> template file:
+
+    <!--{FillInForm}-->
+    <form action="thank_you" method="get">
+    <!--{MISSING}-->
+    Name: <input name="name" type="text" value=""><br>
+    Email: <input name="email" type="text" value=""><br>
+    <input type="submit" name="submit" value="Submit">
+    </form>
+    <!--{/FillInForm}-->
+
+B<Note>: The 'FillInForm' block is optional, but it will automatically re-fills the fields on error (if you are using CGI::Builder::Magic >= 1.22).
 
 =head1 METHODS
 
@@ -230,11 +270,13 @@ B<Note>: You can completely override the creation of the internal object by over
 
 This property allows you to access the C<Data::FormValidator::Results> object set by the C<dfv_check()> method only if there are some missing or invalid fields.
 
-=head1 SUPPORT and FEEDBACK
+=head1 SUPPORT
+
+Support for all the modules of the CBF is via the mailing list. The list is used for general support on the use of the CBF, announcements, bug reports, patches, suggestions for improvements or new features. The API to the CBF is stable, but if you use the CBF in a production environment, it's probably a good idea to keep a watch on the list.
 
 You can join the CBF mailing list at this url:
 
-    http://lists.sourceforge.net/lists/listinfo/cgi-builder-users
+http://lists.sourceforge.net/lists/listinfo/cgi-builder-users
 
 =head1 AUTHOR and COPYRIGHT
 

@@ -1,4 +1,10 @@
 CGI-Builder-DFVCheck Latest Versions Changes
 
+
+Version 1.2
+- Fixed some POD errors
+- More detailed examples
+- The version has been updated to the current C::B (1.2)
+
 Version 1.0
 - First public release

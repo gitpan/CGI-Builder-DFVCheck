@@ -1,7 +1,7 @@
 ; use ExtUtils::MakeMaker
 
 ; my $dist = 'CGI::Builder::DFVCheck'
-; my $vers = '1.0'
+; my $vers = '1.2'
 
 ; WriteMakefile
    ( NAME           => $dist

@@ -8,7 +8,7 @@
 ; BEGIN
    { chdir './t'
    ; require './Test.pm'
-   ; if ( eval { require Template::Magic })
+   ; if ( eval { require CGI::Builder::Magic })
       { $TM = 1
       ; require 'MagicTest.pm'
       }
@@ -23,7 +23,7 @@
     )
     
 ; SKIP:
-   { skip("Template::Magic is not installed", 1)
+   { skip("CGI::Builder::Magic is not installed", 1)
      unless $TM
    ; my $ap2 = MagicAppl1->new()
    ; my $o2 = $ap2->capture('process')
