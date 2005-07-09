@@ -1,10 +1,10 @@
 package CGI::Builder::DFVCheck ;
-$VERSION = 1.25 ;
+$VERSION = 1.26 ;
+use strict ;
 
 # This file uses the "Perlish" coding style
 # please read http://perl.4pro.net/perlish_coding_style.html
 
-; use strict
 ; use Carp
 ; $Carp::Internal{+__PACKAGE__}++
 
@@ -38,11 +38,13 @@ $VERSION = 1.25 ;
 
 __END__
 
+=pod
+
 =head1 NAME
 
 CGI::Builder::DFVCheck - CGI::Builder and Data::FormValidator integration
 
-=head1 VERSION 1.25
+=head1 VERSION 1.26
 
 To have the complete list of all the extensions of the CBF, see L<CGI::Builder/"Extensions List">
 
@@ -192,13 +194,13 @@ Your CBB:
     
     sub MISSING {
         my $s = shift ;
-        my $missing
+        my $missing;
         if ( $s->dfv_resuts->has_missing ) {
             foreach my $f ( $s->dfv_resuts->missing ) {
                $missing .= "<b>$f</b> value is missing<br>\n";
             }
         }
-        $missing
+        $missing;
     }
 
 Somewhere in the 'input_form.html' template (or in any other template) all the 'MISSING' labels will be substituted with the relative error if present:
@@ -255,4 +257,6 @@ See L<CGI::Builder/"SUPPORT">.
 © 2004 by Domizio Demichelis (L<http://perl.4pro.net>)
 
 All Rights Reserved. This module is free software. It may be used, redistributed and/or modified under the same terms as perl itself.
+
+=cut
 

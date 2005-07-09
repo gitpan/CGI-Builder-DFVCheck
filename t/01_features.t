@@ -1,20 +1,16 @@
 #!perl -w
 ; use strict
 ; use Test::More tests => 3
-; use CGI
 
 ; our $TM
 
 ; BEGIN
-   { eval { require './t/Test.pm' }
-         || require './Test.pm'
+   { chdir './t'
+   ; require './Test.pm'
    ; if ( eval { require CGI::Builder::Magic })
       { $TM = 1
-      ; eval { require './t/MagicTest.pm'
-             }
-            || require './MagicTest.pm'
+      ; require './MagicTest.pm'
       }
-   ; chdir './t' 
    }
 
 # index.tmpl
