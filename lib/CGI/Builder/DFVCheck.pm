@@ -1,5 +1,5 @@
 package CGI::Builder::DFVCheck ;
-$VERSION = 1.26 ;
+$VERSION = 1.27 ;
 use strict ;
 
 # This file uses the "Perlish" coding style
@@ -28,7 +28,8 @@ use strict ;
    ; $profile || croak 'Missing required profile'
    ; $profile = $s->$profile()
                 unless ref $profile eq 'HASH'
-   ; my $r = $s->dfv_results = $s->dfv_new->check( $s->cgi, $profile )
+   ; my $r = $s->dfv_new->check( $s->cgi, $profile )
+   ; $s->dfv_results($r)
    ; ( $r->has_missing || $r->has_invalid )
      ? do{ $s->page_error($r->msgs); 0 }
      : 1
@@ -44,7 +45,7 @@ __END__
 
 CGI::Builder::DFVCheck - CGI::Builder and Data::FormValidator integration
 
-=head1 VERSION 1.26
+=head1 VERSION 1.27
 
 To have the complete list of all the extensions of the CBF, see L<CGI::Builder/"Extensions List">
 
