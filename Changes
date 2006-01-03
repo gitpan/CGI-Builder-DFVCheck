@@ -1,5 +1,9 @@
 CGI-Builder-DFVCheck Latest Versions Changes
 
+Version 1.28
+- Fixed the 01_features.t' test now compatible with Data::FormValidator >= 4
+  (Data::FOrmValidator::Results is bool overloaded)
+
 Version 1.27
 - Removed the internal use of lvalue assigments incompatible with
   the perl-bug #17663 (Perl 5 Debugger doesn't handle properly lvalue

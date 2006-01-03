@@ -1,5 +1,5 @@
 package CGI::Builder::DFVCheck ;
-$VERSION = 1.27 ;
+$VERSION = 1.28 ;
 use strict ;
 
 # This file uses the "Perlish" coding style
@@ -45,7 +45,7 @@ __END__
 
 CGI::Builder::DFVCheck - CGI::Builder and Data::FormValidator integration
 
-=head1 VERSION 1.27
+=head1 VERSION 1.28
 
 To have the complete list of all the extensions of the CBF, see L<CGI::Builder/"Extensions List">
 

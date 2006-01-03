@@ -8,11 +8,10 @@
 
 ; sub SH_index
    { my $s = shift
-   ; $s->dfv_check( { required => 'email'
+   ; my $res = $s->dfv_check( { required => 'email'
                     , msgs     => { prefix => 'err_' }
                     }
-                  )
-                  || $s->switch_to('myOtherPage')
+                  ) || $s->switch_to('myOtherPage')
    }
 
 ; sub PH_index

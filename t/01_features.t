@@ -20,7 +20,7 @@
 ; ok(  $$o1 =~ /err_email <span/
     && $$o1 !~ /index content/
     )
-; ok($ap1->dfv_results)
+; isa_ok $ap1->dfv_results, 'Data::FormValidator::Results'
     
     
 ; SKIP:
